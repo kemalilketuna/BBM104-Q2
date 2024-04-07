@@ -2,228 +2,283 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Abstract class representing the general structure and functionality of a classroom.
+ * Represents a Classroom with specific characteristics like name, shape, dimensions, etc.
+ * It utilizes the Builder pattern for object construction and provides methods to calculate
+ * wall and floor areas based on the classroom's shape.
  */
-abstract class Classroom{
-    protected String name;
-    protected String shape;
-
-    /**
-     * Constructor for Classroom.
-     *
-     * @param name The name of the classroom.
-     * @param shape The shape of the classroom.
-     */
-    public Classroom(String name, String shape){
-        this.name = name;
-        this.shape = shape;
-    }
-
-    /**
-     * Calculates the wall area of the classroom.
-
-     * @return The wall area as a float.
-     */
-    public abstract float calculateWallArea();
-
-    /**
-     * Calculates the floor area of the classroom.
-     *
-     * @return The floor area as a float.
-     */
-    public abstract float calculateFloorArea();
-}
-
-/**
- * Represents a circular classroom that extends the Classroom class.
- */
-class CircularClassroom extends Classroom{
-    protected float radius;
-    protected float height;
-
-    /**
-     * Constructor for CircularClassroom.
-     *
-     * @param name The name of the classroom.
-     * @param diameter The diameter of the classroom.
-     * @param height The height of the classroom.
-     */
-    public CircularClassroom(String name, float diameter, float height){
-        super(name, "Circular");
-        this.radius = diameter / 2;
-        this.height = height;
-    }
-
-    @Override
-    public float calculateWallArea(){
-        return 2 * (float) Math.PI * radius * height;
-    }
-
-    @Override
-    public float calculateFloorArea(){
-        return (float) Math.PI * radius * radius;
-    }
-}
-
-/**
- * Represents a rectangular classroom that extends the Classroom class.
- */
-class RectangularClassroom extends Classroom{
-    protected float width;
-    protected float length;
-    protected float height;
-
-    /**
-     * Constructor for RectangularClassroom.
-     *
-     * @param name The name of the classroom.
-     * @param width The width of the classroom.
-     * @param length The length of the classroom.
-     * @param height The height of the classroom.
-     */
-    public RectangularClassroom(String name, float width, float length, float height){
-        super(name, "Rectangular");
-        this.width = width;
-        this.length = length;
-        this.height = height;
-    }
-
-    @Override
-    public float calculateWallArea(){
-        return 2 * (width + length) * height;
-    }
-
-    @Override
-    public float calculateFloorArea(){
-        return width * length;
-    }
-}
-
-/**
- * Abstract class representing decorations in a classroom.
- */
-abstract class Decoration{
-    protected String name;
-    protected String type;
-    protected float unitCost;
-
-    /**
-     * Constructor for Decoration.
-     *
-     * @param name The name of the decoration.
-     * @param type The type of the decoration.
-     * @param unitCost The cost per unit of the decoration.
-     */
-    public Decoration(String name, String type, float unitCost){
-        this.name = name;
-        this.type = type;
-        this.unitCost = unitCost;
-    }
-
-    /**
-     * Calculates the cost of the decoration based on the area.
-     *
-     * @param area The area to calculate the cost for.
-     * @return The cost as a float.
-     */
-    public abstract float calculateCostByArea(float area);
-
-    /**
-     * Counts the number of decorations needed based on the area.
-     *
-     * @param area The area to calculate the count for.
-     * @return The count as an integer.
-     */
-    public abstract int count(float area);
-}
-
-/**
- * Represents a paint decoration, extending the Decoration class.
-*/
-class Paint extends Decoration{
-    /**
-     * Constructor for Paint.
-     *
-     * @param name The name of the paint.
-     * @param unitCost The cost per unit of the paint.
-     */
-    public Paint(String name, float unitCost){
-        super(name, "Paint", unitCost);
-    }
+class Classroom {
+    private final String name;
+    private final String shape;
+    private final float width;
+    private final float length;
+    private final float diameter;
+    private final float height;
     
-    @Override
-    public float calculateCostByArea(float area){
-        return (float) Math.ceil(area * unitCost);
+    /**
+     * Private constructor for Classroom.
+     * @param builder The Builder object providing the necessary data to construct a Classroom instance.
+     */
+    private Classroom(Builder builder) {
+        this.name = builder.name;
+        this.shape = builder.shape;
+        this.width = builder.width;
+        this.length = builder.length;
+        this.diameter = builder.diameter;
+        this.height = builder.height;
     }
 
-    @Override
-    public int count(float area){
-        return (int) Math.ceil(area);
+    /**
+     * Provides a Builder instance to construct a Classroom.
+     * @return A new Builder instance.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder class for constructing Classroom instances.
+     */
+    public static class Builder {
+        private String name;
+        private String shape;
+        private float width;
+        private float length;
+        private float diameter;
+        private float height;
+
+        /**
+         * Sets the name of the Classroom.
+         * @param name The name to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
+         * Sets the shape of the Classroom.
+         * @param shape The shape to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setShape(String shape) {
+            this.shape = shape;
+            return this;
+        }
+
+        /**
+         * Sets the width of the Classroom.
+         * @param width The width to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setWidth(float width) {
+            this.width = width;
+            return this;
+        }
+
+        /**
+         * Sets the length of the Classroom.
+         * @param length The length to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setLength(float length) {
+            this.length = length;
+            return this;
+        }
+
+        /**
+         * Sets the diameter of the Classroom.
+         * @param diameter The diameter to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setDiameter(float diameter) {
+            this.diameter = diameter;
+            return this;
+        }
+
+        /**
+         * Sets the height of the Classroom.
+         * @param height The height to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setHeight(float height) {
+            this.height = height;
+            return this;
+        }
+
+        /**
+         * Builds and returns a Classroom instance with the set properties.
+         * @return A new Classroom instance.
+         */
+        public Classroom build() {
+            return new Classroom(this);
+        }
+    }
+
+    /**
+     * Calculates the wall area of the Classroom based on its shape and dimensions.
+     * @return The calculated wall area.
+     */
+    public float calculateWallArea() {
+        if (shape.equals("Circle")) {
+            return (float) (Math.PI * diameter * height);
+        } else {
+            return 2 * height * (width + length);
+        }
+    }
+
+    /**
+     * Calculates the floor area of the Classroom based on its shape and dimensions.
+     * @return The calculated floor area.
+     */
+    public float calculateFloorArea() {
+        if (shape.equals("Circle")) {
+            return (float) (Math.PI * Math.pow(diameter / 2, 2));
+        } else {
+            return width * length;
+        }
+    }
+
+    /**
+     * Returns the name of the Classroom.
+     * @return The name of the Classroom.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the shape of the Classroom.
+     * @return The shape of the Classroom.
+     */
+    public String getShape() {
+        return shape;
     }
 }
 
 /**
- * Represents a wallpaper decoration, extending the Decoration class.
+ * Represents a Decoration with properties like name, type, unit cost, and area per unit.
+ * It includes a Builder for creating instances and methods for calculating the required number of units and total cost.
  */
-class Wallpaper extends Decoration{
-    /**
-     * Constructor for Wallpaper.
-     *
-     * @param name The name of the wallpaper.
-     * @param unitCost The cost per unit of the wallpaper.
-     */
-    public Wallpaper(String name, float unitCost){
-        super(name, "Wallpaper", unitCost);
-        this.unitCost = unitCost;
-    }
-
-    @Override
-    public float calculateCostByArea(float area){
-        return (float) Math.ceil(area * unitCost);
-    }
-
-    @Override
-    public int count(float area){
-        return (int) Math.ceil(area);
-    }
-}
-
-/**
- * Represents a tile decoration, extending the Decoration class.
- */
-class Tile extends Decoration{
-    protected float areaPerTile;
+class Decoration {
+    private String name;
+    private String type;
+    private float unitCost;
+    private float areaOfUnit;
 
     /**
-     * Constructor for Tile.
-     *
-     * @param name The name of the tile.
-     * @param unitCost The cost per unit of the tile.
-     * @param areaPerTile The area per tile.
+     * Private constructor for Decoration.
+     * @param builder The Builder object providing the data to construct a Decoration instance.
      */
-    public Tile(String name, float unitCost, float areaPerTile){
-        super(name, "Tile", unitCost);
-        this.areaPerTile = areaPerTile;
+    private Decoration(Builder builder) {
+        this.name = builder.name;
+        this.type = builder.type;
+        this.unitCost = builder.unitCost;
+        this.areaOfUnit = builder.areaPerUnit;
     }
 
     /**
-     * Counts the number of tiles needed based on the area.
-     *
-     * @param area The area to calculate the count for.
-     * @return The count as a float.
+     * Provides a Builder instance to construct a Decoration.
+     * @return A new Builder instance.
      */
-    public float countTiles(float area){
-        return (float) Math.ceil(area / areaPerTile);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    @Override
-    public int count(float area){
-        return (int) countTiles(area);
+    /**
+     * Builder class for constructing Decoration instances.
+     */
+    public static class Builder {
+        private String name;
+        private String type;
+        private float unitCost;
+        private float areaPerUnit;
+
+        /**
+         * Sets the name of the Decoration.
+         * @param name The name to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
+         * Sets the type of the Decoration.
+         * @param type The type to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        /**
+         * Sets the unit cost of the Decoration.
+         * @param unitCost The unit cost to set.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setUnitCost(float unitCost) {
+            this.unitCost = unitCost;
+            return this;
+        }
+
+        /**
+         * Sets the area of one unit of the Decoration.
+         * @param areaOfTile The area to set for one unit.
+         * @return The Builder instance for chaining.
+         */
+        public Builder setAreaOfUnit(float areaPerUnit) {
+            this.areaPerUnit = areaPerUnit;
+            return this;
+        }
+
+        /**
+         * Builds and returns a Decoration instance with the set properties.
+         * @return A new Decoration instance.
+         */
+        public Decoration build() {
+            return new Decoration(this);
+        }
     }
 
-    @Override
-    public float calculateCostByArea(float area){
-        return (float) Math.ceil(countTiles(area) * unitCost);
+    /**
+     * Gets the name of the Decoration.
+     * @return The name of the Decoration.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the type of the Decoration.
+     * @return The type of the Decoration.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Calculates and returns the number of units required to cover a given area.
+     * @param area The area to cover with the Decoration.
+     * @return The number of units required.
+     */
+    public int count(float area) {
+        return (int) Math.ceil(area / areaOfUnit);
+    }
+
+    /**
+     * Calculates the total cost to cover a given area with the Decoration.
+     * @param area The area to cover.
+     * @return The total cost.
+     */
+    public int calculateCostByArea(float area) {
+        if (type.equals("Tile")) {
+            return (int) (unitCost * count(area));
+        } else {
+            return (int) (Math.ceil(area / areaOfUnit * unitCost));
+        }
     }
 }
 
@@ -235,7 +290,7 @@ class OutputHelper{
     private static final String totalCostMessage = "Total price is: %dTL.";
 
     private static String getDecorationSuffix(Decoration decoration){
-        switch (decoration.type){
+        switch (decoration.getType()){
             case "Paint":
                 return "m2 of Paint";
             case "Wallpaper":
@@ -261,7 +316,7 @@ class OutputHelper{
         String suffix1, suffix2;
         suffix1 = getDecorationSuffix(decoration1);
         suffix2 = getDecorationSuffix(decoration2);
-        System.out.println(String.format(decorationMessage, classroom.name, count1, suffix1, count2, suffix2, cost));
+        System.out.println(String.format(decorationMessage, classroom.getName(), count1, suffix1, count2, suffix2, cost));
     }
 
     /**
@@ -290,7 +345,7 @@ class DecorationManager{
      * @param height The height of the classroom.
      */
     public void addCircularClassroom(String name, float diameter, float height){
-        classrooms.put(name, new CircularClassroom(name, diameter, height));
+        classrooms.put(name, Classroom.builder().setName(name).setShape("Circle").setDiameter(diameter).setHeight(height).build());
     }
 
     /**
@@ -302,7 +357,7 @@ class DecorationManager{
      * @param height The height of the classroom.
      */
     public void addRectangularClassroom(String name, float width, float length, float height){
-        classrooms.put(name, new RectangularClassroom(name, width, length, height));
+        classrooms.put(name, Classroom.builder().setName(name).setShape("Rectangle").setWidth(width).setLength(length).setHeight(height).build());
     }
 
     /**
@@ -312,8 +367,8 @@ class DecorationManager{
      * @param unitCost The cost per unit of the tile.
      * @param areaPerTile The area per tile.
      */
-    public void addTileDecoration(String name, float unitCost, float areaPerTile){
-        decorations.put(name, new Tile(name, unitCost, areaPerTile));
+    public void addTileDecoration(String name, float unitCost, float areaPerUnit){
+        decorations.put(name, Decoration.builder().setName(name).setType("Tile").setUnitCost(unitCost).setAreaOfUnit(areaPerUnit).build());
     }
 
     /**
@@ -323,7 +378,7 @@ class DecorationManager{
      * @param unitCost The cost per unit of the paint.
      */
     public void addPaintDecoration(String name, float unitCost){
-        decorations.put(name, new Paint(name, unitCost));
+        decorations.put(name, Decoration.builder().setName(name).setType("Paint").setUnitCost(unitCost).setAreaOfUnit(1).build());
     }
 
     /**
@@ -333,7 +388,7 @@ class DecorationManager{
      * @param unitCost The cost per unit of the wallpaper.
      */
     public void addWallpaperDecoration(String name, float unitCost){
-        decorations.put(name, new Wallpaper(name, unitCost));
+        decorations.put(name, Decoration.builder().setName(name).setType("Wallpaper").setUnitCost(unitCost).setAreaOfUnit(1).build());
     }
 
     /**
