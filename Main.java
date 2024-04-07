@@ -278,7 +278,7 @@ class OutputHelper{
  * Manages the decorations and classrooms.
  */
 class DecorationManager{
-    Map<String, Classroom> classroms = new HashMap<>();
+    Map<String, Classroom> classrooms = new HashMap<>();
     Map<String, Decoration> decorations = new HashMap<>();
     private int totalCost = 0;
 
@@ -290,7 +290,7 @@ class DecorationManager{
      * @param height The height of the classroom.
      */
     public void addCircularClassroom(String name, float diameter, float height){
-        classroms.put(name, new CircularClassroom(name, diameter, height));
+        classrooms.put(name, new CircularClassroom(name, diameter, height));
     }
 
     /**
@@ -302,7 +302,7 @@ class DecorationManager{
      * @param height The height of the classroom.
      */
     public void addRectangularClassroom(String name, float width, float length, float height){
-        classroms.put(name, new RectangularClassroom(name, width, length, height));
+        classrooms.put(name, new RectangularClassroom(name, width, length, height));
     }
 
     /**
@@ -344,7 +344,7 @@ class DecorationManager{
      * @param decoration2Name The name of the second decoration to use.
      */
     public void decorate(String classroomName, String decoration1Name, String decoration2Name){
-        Classroom classroom = classroms.get(classroomName);
+        Classroom classroom = classrooms.get(classroomName);
         Decoration decoration1 = decorations.get(decoration1Name);
         Decoration decoration2 = decorations.get(decoration2Name);
 
