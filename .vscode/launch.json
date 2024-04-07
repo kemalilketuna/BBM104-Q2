@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "test1",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": ["BBM104_S24_Q2_Sample_IO_v2/IO1/items.txt", "BBM104_S24_Q2_Sample_IO_v2/IO1/decorate.txt", "output1.txt"],
+        },
+        {
+            "type": "java",
+            "name": "test2",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": ["BBM104_S24_Q2_Sample_IO_v2/IO2/items.txt", "BBM104_S24_Q2_Sample_IO_v2/IO2/decorate.txt", "output2.txt"],
+        },
+        {
+            "type": "java",
+            "name": "test3",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": ["BBM104_S24_Q2_Sample_IO_v2/IO3/items.txt", "BBM104_S24_Q2_Sample_IO_v2/IO3/decorate.txt", "output3.txt"],
+        },
+    ]
+}

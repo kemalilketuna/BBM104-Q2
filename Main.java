@@ -70,6 +70,7 @@ abstract class Decoration{
     }
 
     public abstract float calculateCostByArea(float area);
+    public abstract int count(float area);
 }
 
 class Paint extends Decoration{
@@ -80,6 +81,11 @@ class Paint extends Decoration{
     @Override
     public float calculateCostByArea(float area){
         return (float) Math.ceil(area * unitCost);
+    }
+
+    @Override
+    public int count(float area){
+        return (int) Math.ceil(area);
     }
 }
 
@@ -92,6 +98,11 @@ class Wallpaper extends Decoration{
     @Override
     public float calculateCostByArea(float area){
         return (float) Math.ceil(area * unitCost);
+    }
+
+    @Override
+    public int count(float area){
+        return (int) Math.ceil(area);
     }
 }
 
@@ -108,13 +119,18 @@ class Tile extends Decoration{
     }
 
     @Override
+    public int count(float area){
+        return (int) countTiles(area);
+    }
+
+    @Override
     public float calculateCostByArea(float area){
         return (float) Math.ceil(countTiles(area) * unitCost);
     }
 }    
 
 class OutputHelper{
-    private static final String decorationMessage = "Classroom %s used %d%s for walls and used %d %s for flooring, these costed %dTL.";
+    private static final String decorationMessage = "Classroom %s used %d%s for walls and used %d%s for flooring, these costed %dTL.";
     private static final String totalCostMessage = "Total price is: %dTL.";
 
     private static String getDecorationSuffix(Decoration decoration){
@@ -124,27 +140,28 @@ class OutputHelper{
             case "Wallpaper":
                 return "m2 of Wallpaper";
             case "Tile":
-                return "Tiles";
+                return " Tiles";
             default:
                 return "";
         }
     }
 
-    public static void printDecoration(Decoration decoration1, int count1 ,Decoration decoration2, int count2, int cost){
-        String part1, part2;
-        part1 = getDecorationSuffix(decoration1);
-        part2 = getDecorationSuffix(decoration2);
-        System.out.println(String.format(decorationMessage, part1, count1, part1, count2, part2, cost));
+    public static void printDecoration(Classroom classroom, Decoration decoration1, int count1 ,Decoration decoration2, int count2, int cost){
+        String suffix1, suffix2;
+        suffix1 = getDecorationSuffix(decoration1);
+        suffix2 = getDecorationSuffix(decoration2);
+        System.out.println(String.format(decorationMessage, classroom.name, count1, suffix1, count2, suffix2, cost));
     }
 
     public static void printTotalCost(int cost){
-        System.out.println(String.format(totalCostMessage, cost));
+        System.out.print(String.format(totalCostMessage, cost));
     }
 }
 
 class DecorationManager{
     Map<String, Classroom> classroms = new HashMap<>();
     Map<String, Decoration> decorations = new HashMap<>();
+    private int totalCost = 0;
 
     public void addCircularClassroom(String name, float diameter, float height){
         classroms.put(name, new CircularClassroom(name, diameter, height));
@@ -164,6 +181,29 @@ class DecorationManager{
 
     public void addWallpaperDecoration(String name, float unitCost){
         decorations.put(name, new Wallpaper(name, unitCost));
+    }
+
+    public void decorate(String classroomName, String decoration1Name, String decoration2Name){
+        Classroom classroom = classroms.get(classroomName);
+        Decoration decoration1 = decorations.get(decoration1Name);
+        Decoration decoration2 = decorations.get(decoration2Name);
+
+        float wallArea = classroom.calculateWallArea();
+        float floorArea = classroom.calculateFloorArea();
+
+        int count1 = decoration1.count(wallArea);
+        int count2 = decoration2.count(floorArea);
+
+        int cost1 = (int) decoration1.calculateCostByArea(wallArea);
+        int cost2 = (int) decoration2.calculateCostByArea(floorArea);
+
+        int cost = cost1 + cost2;
+        totalCost += cost;
+        OutputHelper.printDecoration(classroom, decoration1, count1, decoration2, count2, cost);
+    }
+
+    public void printTotalCost(){
+        OutputHelper.printTotalCost(totalCost);
     }
 }
 
@@ -202,16 +242,12 @@ public class Main{
         line = null;
         while((line = br.readLine()) != null){
             String[] tokens = line.split("\t");
-            if(tokens[0].equals("DECORATE")){
-                float area = decorationManager.classroms.get(tokens[1]).calculateWallArea();
-                float cost = decorationManager.decorations.get(tokens[2]).calculateCostByArea(area);
-                System.out.println(tokens[1] + " " + tokens[2] + " " + (int) cost);
-            }
+            decorationManager.decorate(tokens[0], tokens[1], tokens[2]);
         }
+        decorationManager.printTotalCost();
         br.close();
 
         // Reset output stream
         System.setOut(originalStream);
     }   
 }
-
